@@ -34,4 +34,4 @@ function waterPageReducer(state = initialState, action) {
   }
 }
 
-export default waterPageReducer;
+// export default waterPageReducer;

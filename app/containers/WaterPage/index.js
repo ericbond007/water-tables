@@ -19,21 +19,25 @@ import {
    makeSelectLocation,
    makeSelectWater,
    makeSelectWater24Hour,
+  makeSelectPickerValue,
+  makeSelectWaterSeries
 } from 'containers/App/selectors';
 import reducer from 'containers/App/reducer';
 import saga from './saga';
-import { getWater, getWater24Hour } from './actions';
+import { getWater, getWater24Hour, getWaterSeries, setPickerVal } from './actions';
 import WaterList from 'components/WaterList';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 /* eslint-disable react/prefer-stateless-function */
 export class WaterPage extends React.Component {
-componentDidMount() {
-  this.props.loadWaterData()
-  this.props.load24Hour()
-}
+  componentWillMount() {
+    this.props.loadWaterData()
+    this.props.load24Hour()
+    this.props.loadWaterSeriesData()
+  }
 
   render() {
-    const { loading, error, water, water24 } = this.props;
+    const { loading, error, water, selectValue, waterSeries } = this.props;
     const waterListProps = {
       loading,
       error,
@@ -48,8 +52,22 @@ componentDidMount() {
         </Helmet>
       <div>
       <p>Heres where we show Lake Monroe Water Levels:</p>
+      {/* <select onChange={(e) => this.props.loadWaterSeriesData(e.target.value)} defaultValue={selectValue}> */}
+      <select onChange={(e) => this.props.setTimePickerValue(e.target.value)} defaultValue={selectValue}>
+        <option value="1">1 Hour</option>
+        <option value="8">8 Hours</option>
+        <option value="24">24 Hours</option>
+        <option value="48">48 Hours</option>
+      </select>
       <button onClick={this.props.loadWaterData}>click</button>
       <button onClick={this.props.load24Hour}>click for 24 hours</button>
+      <LineChart width={700} height={400} data={waterSeries}>
+        <XAxis dataKey="dateTime" />
+        <YAxis type="number" domain={['auto', 'auto']} />
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip />
+        <Line type="monotone" dataKey="value" stroke="#8884d8" />
+      </LineChart>
       
       <p>{water}</p>
       </div>
@@ -66,6 +84,8 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   error: makeSelectError(),
   water24: makeSelectWater24Hour(),
+  waterSeries: makeSelectWaterSeries(),
+  selectValue: makeSelectPickerValue(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -77,6 +97,12 @@ function mapDispatchToProps(dispatch) {
     load24Hour: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(getWater24Hour())
+    },
+    setTimePickerValue: (select) => {
+      dispatch(setPickerVal(select))
+    },
+    loadWaterSeriesData: (select) => {
+      dispatch(getWaterSeries(select))
     }
   };
 }

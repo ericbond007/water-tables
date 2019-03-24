@@ -19,6 +19,9 @@ import {
   GET_WATER_SUCCESS,
   GET_WATER_24_HOURS,
   GET_WATER_24_HOURS_SUCCESS,
+  GET_WATER_SERIES,
+  GET_WATER_SERIES_SUCCESS,
+  SET_PICKER_VAL,
 } from '../WaterPage/constants';
 
 // The initial state of the App
@@ -30,7 +33,9 @@ const initialState = fromJS({
     repositories: false,
   },
   water: false,
-  water24: false
+  water24: false,
+  waterSeries: false,
+  selectValue: '48',
 });
 
 function appReducer(state = initialState, action) {
@@ -73,6 +78,18 @@ function appReducer(state = initialState, action) {
         // .setIn(['waterPage', 'lakeMonroe'], action.water.value.timeSeries[0].values[0].value[0].value)
         .set('loading', false)
         .setIn(['water24'], action.water.value.timeSeries[0].values[0].value);
+    case GET_WATER_SERIES:
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .set('water', false)
+    case GET_WATER_SERIES_SUCCESS:
+      return state
+        .set('loading', false)
+        .setIn(['waterSeries'], action.water.value.timeSeries[0].values[0].value);
+    case SET_PICKER_VAL:
+      return state
+        .set('selectValue', action.value);
     default:
       return state;
   }

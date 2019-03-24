@@ -32,11 +32,20 @@ const makeSelectWater24Hour = () =>
     globalState.get('water24'),  
   );
 
+const makeSelectWaterSeries = () =>
+  createSelector(selectGlobal, globalState =>
+    globalState.get('waterSeries'),  
+  );
+
+const makeSelectPickerValue = () =>
+  createSelector(selectGlobal, globalState =>
+    globalState.get('selectValue'),  
+  );
+
 const makeSelectWaterData = () =>
   createSelector(selectGlobal, globalState =>
     globalState.getIn(['waterPage', 'waterData']),  
   );
-
 
 const makeSelectLocation = () =>
   createSelector(selectRouter, routerState =>
@@ -53,4 +62,6 @@ export {
   makeSelectWater,
   makeSelectWaterData,
   makeSelectWater24Hour,
+  makeSelectPickerValue,
+  makeSelectWaterSeries,
 };
