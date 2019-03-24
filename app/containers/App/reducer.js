@@ -34,8 +34,8 @@ const initialState = fromJS({
   },
   water: false,
   water24: false,
-  waterSeries: false,
-  selectValue: '48',
+  waterSeries: [{}],
+  selectValue: 'T48H',
 });
 
 function appReducer(state = initialState, action) {
@@ -84,9 +84,10 @@ function appReducer(state = initialState, action) {
         .set('error', false)
         .set('water', false)
     case GET_WATER_SERIES_SUCCESS:
+      const realWater = action.water.value.timeSeries[0].values[0].value;
       return state
         .set('loading', false)
-        .setIn(['waterSeries'], action.water.value.timeSeries[0].values[0].value);
+        .setIn(['waterSeries'], realWater);
     case SET_PICKER_VAL:
       return state
         .set('selectValue', action.value);

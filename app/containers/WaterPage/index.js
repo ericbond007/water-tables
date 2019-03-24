@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
+import WaterChart from 'components/WaterChart';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -26,7 +27,7 @@ import reducer from 'containers/App/reducer';
 import saga from './saga';
 import { getWater, getWater24Hour, getWaterSeries, setPickerVal } from './actions';
 import WaterList from 'components/WaterList';
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 
 /* eslint-disable react/prefer-stateless-function */
 export class WaterPage extends React.Component {
@@ -38,10 +39,12 @@ export class WaterPage extends React.Component {
 
   render() {
     const { loading, error, water, selectValue, waterSeries } = this.props;
-    const waterListProps = {
+    const waterChartProps = {
       loading,
       error,
       water,
+      selectValue,
+      waterSeries,
     };
 
     return (
@@ -52,24 +55,18 @@ export class WaterPage extends React.Component {
         </Helmet>
       <div>
       <p>Heres where we show Lake Monroe Water Levels:</p>
-      {/* <select onChange={(e) => this.props.loadWaterSeriesData(e.target.value)} defaultValue={selectValue}> */}
       <select onChange={(e) => this.props.setTimePickerValue(e.target.value)} defaultValue={selectValue}>
-        <option value="1">1 Hour</option>
-        <option value="8">8 Hours</option>
-        <option value="24">24 Hours</option>
-        <option value="48">48 Hours</option>
+        <option value="T1H">1 Hour</option>
+        <option value="T8H">8 Hours</option>
+        <option value="T24H">24 Hours</option>
+        <option value="T48H">48 Hours</option>
+        <option value="3D">3 Days</option>
+        <option value="7D">7 Days</option>
+        <option value="31D">31 Days</option>
       </select>
-      <button onClick={this.props.loadWaterData}>click</button>
-      <button onClick={this.props.load24Hour}>click for 24 hours</button>
-      <LineChart width={700} height={400} data={waterSeries}>
-        <XAxis dataKey="dateTime" />
-        <YAxis type="number" domain={['auto', 'auto']} />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
-        <Line type="monotone" dataKey="value" stroke="#8884d8" />
-      </LineChart>
-      
-      <p>{water}</p>
+
+      <WaterChart {...waterChartProps} />
+
       </div>
       </div>
     );

@@ -35,7 +35,7 @@ export function* getWater24() {
 
 export function* getWaterSeries() {
   const pickerValue = yield select(makeSelectPickerValue());
-  const requestURL = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03372400&siteStatus=all&period=PT${pickerValue}H`
+  const requestURL = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03372400&siteStatus=all&period=P${pickerValue}`
 
   try {
     const water = yield call(request, requestURL);

@@ -35,14 +35,13 @@ export default function App() {
     <AppWrapper>
       <Helmet
         titleTemplate="%s - React.js Boilerplate"
-        defaultTitle="React.js Boilerplate"
+        defaultTitle="Lake Monroe Water Levels"
       >
-        <meta name="description" content="A React.js Boilerplate application" />
+        <meta name="description" content="Historical Charts of Lake Monroe Water Levels" />
       </Helmet>
       <Header />
       <Switch>
         <Route exact path="/" component={WaterPage} />
-        <Route path="/features" component={FeaturePage} />
         <Route path="" component={NotFoundPage} />
       </Switch>
       <Footer />
