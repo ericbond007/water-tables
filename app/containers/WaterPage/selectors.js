@@ -1,13 +1,12 @@
 import { createSelector } from 'reselect';
 import { initialState } from './reducer';
+// import { selectGlobal } from '../App/selectors';
 
-const selectWaterPageDomain = state => state.get('waterPage', initialState);
+const selectWater = state => state.get('waterPage', initialState);
 
-
-const makeSelectWaterPage = () =>
-  createSelector(selectWaterPageDomain, substate => substate.toJS());
+const makeSelectWater = () =>
+ createSelector(selectWater, waterState => waterState.get('waterData'));
 
 export { 
-  makeSelectWaterPage,
-  selectWaterPageDomain,
+   makeSelectWater
 };

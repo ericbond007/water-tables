@@ -14,22 +14,32 @@ import { compose } from 'redux';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import {
-  // makeSelectLoading,
-  // makeSelectError,
-  //makeSelectWater,
-  makeSelectLocation,
+   makeSelectLoading,
+   makeSelectError,
+   makeSelectLocation,
+   makeSelectWater,
+   makeSelectWater24Hour,
 } from 'containers/App/selectors';
-import {
-  makeSelectWaterPage,
-} from './selectors';
-import reducer from './reducer';
+import reducer from 'containers/App/reducer';
 import saga from './saga';
-import { getWater } from './actions';
+import { getWater, getWater24Hour } from './actions';
+import WaterList from 'components/WaterList';
 
 /* eslint-disable react/prefer-stateless-function */
 export class WaterPage extends React.Component {
+componentDidMount() {
+  this.props.loadWaterData()
+  this.props.load24Hour()
+}
+
   render() {
-    // const { loading, error, water } = this.props;
+    const { loading, error, water, water24 } = this.props;
+    const waterListProps = {
+      loading,
+      error,
+      water,
+    };
+
     return (
       <div>
         <Helmet>
@@ -39,6 +49,9 @@ export class WaterPage extends React.Component {
       <div>
       <p>Heres where we show Lake Monroe Water Levels:</p>
       <button onClick={this.props.loadWaterData}>click</button>
+      <button onClick={this.props.load24Hour}>click for 24 hours</button>
+      
+      <p>{water}</p>
       </div>
       </div>
     );
@@ -49,10 +62,10 @@ WaterPage.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  waterPage: makeSelectWaterPage(),
-  // water: makeSelectWater(),
-  // loading: makeSelectLoading(),
-  // error: makeSelectError(),
+  water: makeSelectWater(),
+  loading: makeSelectLoading(),
+  error: makeSelectError(),
+  water24: makeSelectWater24Hour(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -60,6 +73,10 @@ function mapDispatchToProps(dispatch) {
     loadWaterData: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(getWater())
+    },
+    load24Hour: evt => {
+      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+      dispatch(getWater24Hour())
     }
   };
 }
