@@ -12,28 +12,43 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import WaterChart from 'components/WaterChart';
 
+import {
+  ONE_HOUR,
+  FOUR_HOUR,
+  EIGHT_HOUR,
+  ONE_DAY,
+  TWO_DAY,
+  THREE_DAY,
+  SEVEN_DAY,
+  ONE_MONTH,
+  THREE_MONTH,
+  SIX_MONTH,
+  ONE_YEAR,
+  TWO_YEAR,
+  FIVE_YEAR,
+  TEN_YEAR,
+} from './constants';
+
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import {
    makeSelectLoading,
    makeSelectError,
    makeSelectLocation,
-   makeSelectWater,
-   makeSelectWater24Hour,
   makeSelectPickerValue,
-  makeSelectWaterSeries
+  makeSelectWaterSeries,
 } from 'containers/App/selectors';
 import reducer from 'containers/App/reducer';
 import saga from './saga';
-import { getWater, getWater24Hour, getWaterSeries, setPickerVal } from './actions';
+import { getWaterSeries, setPickerVal } from './actions';
 import WaterList from 'components/WaterList';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 
 /* eslint-disable react/prefer-stateless-function */
 export class WaterPage extends React.Component {
-  componentWillMount() {
-    this.props.loadWaterData()
-    this.props.load24Hour()
+  componentDidMount() {
+    // this.props.loadWaterData()
+    // this.props.load24Hour()
     this.props.loadWaterSeriesData()
   }
 
@@ -46,6 +61,64 @@ export class WaterPage extends React.Component {
       selectValue,
       waterSeries,
     };
+    const selectOptions = [
+      {
+        "label": "1 Hour",
+        "value": "1",
+      },
+      {
+        "label": "4 Hours",
+        "value": "4",
+      },
+      {
+        "label": "8 Hours",
+        "value": "8",
+      },
+      {
+        "label": "24 Hours",
+        "value": "24",
+      },
+      {
+        "label": "48 Hours",
+        "value": "48",
+      },
+      {
+        "label": "3 Days",
+        "value": "3D",
+      },
+      {
+        "label": "7 Days",
+        "value": "7D",
+      },
+      {
+        "label": "1 Month",
+        "value": "30D",
+      },
+      {
+        "label": "3 Months",
+        "value": "90D",
+      },
+      {
+        "label": "6 Months",
+        "value": "180D",
+      },
+      {
+        "label": "9 Months",
+        "value": "270D",
+      },
+      {
+        "label": "1 Year",
+        "value": "365D",
+      },
+      {
+        "label": "2 Years",
+        "value": "723D",
+      },
+      {
+        "label": "5 Years",
+        "value": "1825D",
+      },
+    ]
 
     return (
       <div>
@@ -53,21 +126,16 @@ export class WaterPage extends React.Component {
           <title>WaterPage</title>
           <meta name="description" content="Description of WaterPage" />
         </Helmet>
-      <div>
-      <p>Heres where we show Lake Monroe Water Levels:</p>
-      <select onChange={(e) => this.props.setTimePickerValue(e.target.value)} defaultValue={selectValue}>
-        <option value="T1H">1 Hour</option>
-        <option value="T8H">8 Hours</option>
-        <option value="T24H">24 Hours</option>
-        <option value="T48H">48 Hours</option>
-        <option value="3D">3 Days</option>
-        <option value="7D">7 Days</option>
-        <option value="31D">31 Days</option>
-      </select>
+        <div>
+          <p>Heres where we show Lake Monroe Water Levels:</p>
+          <select onChange={(e) => this.props.setTimePickerValue(e.target.value)} defaultValue={selectValue}>
+            {selectOptions.map(option =>
+              <option key={option.value} value={option.value} label={option.label}>{option.label}</option>
+            )};
+          </select>
 
-      <WaterChart {...waterChartProps} />
-
-      </div>
+          <WaterChart {...waterChartProps} />
+        </div>
       </div>
     );
   }
@@ -77,10 +145,8 @@ WaterPage.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  water: makeSelectWater(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
-  water24: makeSelectWater24Hour(),
   waterSeries: makeSelectWaterSeries(),
   selectValue: makeSelectPickerValue(),
 });

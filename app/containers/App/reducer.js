@@ -13,15 +13,16 @@
 import { fromJS } from 'immutable';
 
 import { LOAD_REPOS_SUCCESS, LOAD_REPOS, LOAD_REPOS_ERROR } from './constants';
-import { 
-  GET_WATER, 
-  GET_WATER_FAILURE, 
+import {
+  GET_WATER,
+  GET_WATER_FAILURE,
   GET_WATER_SUCCESS,
   GET_WATER_24_HOURS,
   GET_WATER_24_HOURS_SUCCESS,
   GET_WATER_SERIES,
   GET_WATER_SERIES_SUCCESS,
   SET_PICKER_VAL,
+  ONE_DAY,
 } from '../WaterPage/constants';
 
 // The initial state of the App
@@ -35,7 +36,7 @@ const initialState = fromJS({
   water: false,
   water24: false,
   waterSeries: [{}],
-  selectValue: 'T48H',
+  selectValue: '24',
 });
 
 function appReducer(state = initialState, action) {
@@ -57,10 +58,8 @@ function appReducer(state = initialState, action) {
         .set('loading', true)
         .set('error', false)
         .set('water', false)
-        // .setIn(['waterPage', 'lakeMonroe'], false);
     case GET_WATER_SUCCESS:
       return state
-        // .setIn(['waterPage', 'lakeMonroe'], action.water.value.timeSeries[0].values[0].value[0].value)
         .set('loading', false)
         .setIn(['water'], action.water.value.timeSeries[0].values[0].value[0].value);
     case GET_WATER_FAILURE:
